@@ -34,7 +34,7 @@ class FooterToolsWidget extends StatelessWidget {
     return Container(
       alignment: Alignment.bottomRight,
       child: Padding(
-        padding: const EdgeInsets.only(top: 4, right: 16),
+        padding: const EdgeInsets.only(top: 4, right: 16, bottom: 10),
         child: doneButtonChild != null ? const SizedBox() : Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
