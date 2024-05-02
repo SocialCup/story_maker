@@ -13,13 +13,11 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 
-import 'components/background_gradient_selector_widget.dart';
 import 'components/font_family_select_widget.dart';
 import 'components/footer_tools_widget.dart';
 import 'components/overlay_item_widget.dart';
 import 'components/remove_widget.dart';
 import 'components/size_slider_widget.dart';
-import 'components/text_color_select_widget.dart';
 import 'components/text_field_widget.dart';
 import 'components/top_tools_widget.dart';
 import 'constants/font_colors.dart';
@@ -162,47 +160,38 @@ class _StoryMakerState extends State<StoryMaker> {
       textHeightBehavior: const TextHeightBehavior(
         leadingDistribution: TextLeadingDistribution.even,
       ),
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.black,
-        body: Stack(
-          clipBehavior: Clip.antiAlias,
-          children: [
-            Positioned(
-              top: context.topPadding,
-              left: 0,
-              right: 0,
-              child: ClipRect(
-                child: AspectRatio(
-                  aspectRatio: 9 / 16,
-                  child: GestureDetector(
-                    onScaleStart: _onScaleStart,
-                    onScaleUpdate: _onScaleUpdate,
-                    onTap: _onScreenTap,
-                    child: Stack(
-                      children: [
-                        RepaintBoundary(
-                          key: previewContainer,
-                          child: Stack(
+      child: RepaintBoundary(
+        key: previewContainer,
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          resizeToAvoidBottomInset: false,
+          body: Stack(
+            clipBehavior: Clip.antiAlias,
+            children: [
+              Positioned(
+                //top: context.topPadding,
+                left: 0,
+                right: 0,
+                top: context.topPadding,
+                child: ClipRect(
+                  child: AspectRatio(
+                    aspectRatio: .5,
+                    child: GestureDetector(
+                      onScaleStart: _onScaleStart,
+                      onScaleUpdate: _onScaleUpdate,
+                      onTap: _onScreenTap,
+                      child: Stack(
+                        children: [
+                          Stack(
                             children: [
                               Visibility(
                                 visible: _stackData[0].type == ItemType.IMAGE,
-                                child: Center(
-                                  child: PhotoView(
-                                    enableRotation: true,
-                                    backgroundDecoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: FractionalOffset.topLeft,
-                                        end: FractionalOffset.centerRight,
-                                        colors: gradientColors[
-                                            _selectedBackgroundGradient],
-                                      ),
-                                    ),
-                                    maxScale: 2.0,
-                                    enablePanAlways: false,
-                                    imageProvider: FileImage(
-                                      File(_stackData[0].value),
-                                    ),
+                                child: PhotoView(
+                                  enableRotation: true,
+                                  maxScale: 2.0,
+                                  enablePanAlways: false,
+                                  imageProvider: FileImage(
+                                    File(_stackData[0].value),
                                   ),
                                 ),
                               ),
@@ -234,107 +223,109 @@ class _StoryMakerState extends State<StoryMaker> {
                               ),
                             ],
                           ),
-                        ),
-                        AnimatedSwitcher(
-                          duration: widget.animationsDuration,
-                          child: !_isTextInput
-                              ? const SizedBox()
-                              : Container(
-                                  height: context.height,
-                                  width: context.width,
-                                  color: Colors.black.withOpacity(0.4),
-                                  child: Stack(
-                                    children: [
-                                      TextFieldWidget(
-                                        controller: _editingController,
-                                        onChanged: _onTextChange,
-                                        onSubmit: _onTextSubmit,
-                                        fontSize: _selectedFontSize,
-                                        fontFamilyIndex: _selectedFontFamily,
-                                        textColor: _selectedTextColor,
-                                        backgroundColorIndex:
-                                            _selectedTextBackgroundGradient,
-                                      ),
-                                      SizeSliderWidget(
-                                        animationsDuration:
-                                            widget.animationsDuration,
-                                        selectedValue: _selectedFontSize,
-                                        onChanged: (input) {
-                                          setState(
-                                            () {
-                                              _selectedFontSize = input;
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ],
+                          AnimatedSwitcher(
+                            duration: widget.animationsDuration,
+                            child: !_isTextInput
+                                ? const SizedBox()
+                                : Container(
+                                    height: context.height,
+                                    width: context.width,
+                                    color: Colors.black.withOpacity(0.4),
+                                    child: Stack(
+                                      children: [
+                                        TextFieldWidget(
+                                          controller: _editingController,
+                                          onChanged: _onTextChange,
+                                          onSubmit: _onTextSubmit,
+                                          fontSize: _selectedFontSize,
+                                          fontFamilyIndex: _selectedFontFamily,
+                                          textColor: _selectedTextColor,
+                                          backgroundColorIndex: _selectedTextBackgroundGradient,
+                                        ),
+                                        SizeSliderWidget(
+                                          animationsDuration: widget.animationsDuration,
+                                          selectedValue: _selectedFontSize,
+                                          onChanged: (input) {
+                                            setState(
+                                              () {
+                                                _selectedFontSize = input;
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            if (_isTextInput)
-              if (!_isColorPickerSelected)
-                FontFamilySelectWidget(
+
+              // FONT FAMILY BURADAN SEÇİLİYOR
+              if (_isTextInput)
+                if (!_isColorPickerSelected)
+                  FontFamilySelectWidget(
+                    animationsDuration: widget.animationsDuration,
+                    pageController: _familyPageController,
+                    selectedFamilyIndex: _selectedFontFamily,
+                    onPageChanged: _onFamilyChange,
+                    onTap: (index) {
+                      _onStyleChange(index);
+                    },
+                  ),
+
+              /*else
+                  TextColorSelectWidget(
+                    animationsDuration: widget.animationsDuration,
+                    pageController: _textColorsPageController,
+                    selectedTextColor: _selectedTextColor,
+                    onPageChanged: _onTextColorChange,
+                    onTap: (index) {
+                      _onColorChange(index);
+                    },
+                  ),*/
+              /*BackgroundGradientSelectorWidget(
+                isTextInput: _isTextInput,
+                isBackgroundColorPickerSelected: _isBackgroundColorPickerSelected,
+                inAction: _inAction,
+                animationsDuration: widget.animationsDuration,
+                gradientsPageController: _gradientsPageController,
+                onPageChanged: _onChangeBackgroundGradient,
+                onItemTap: _onBackgroundGradientTap,
+                selectedGradientIndex: _selectedBackgroundGradient,
+              ),*/
+              Visibility(
+                visible: !_isLoading,
+                child: TopToolsWidget(
+                  isTextInput: _isTextInput,
+                  selectedBackgroundGradientIndex: _selectedBackgroundGradient,
                   animationsDuration: widget.animationsDuration,
-                  pageController: _familyPageController,
-                  selectedFamilyIndex: _selectedFontFamily,
-                  onPageChanged: _onFamilyChange,
-                  onTap: (index) {
-                    _onStyleChange(index);
-                  },
-                )
-              else
-                TextColorSelectWidget(
-                  animationsDuration: widget.animationsDuration,
-                  pageController: _textColorsPageController,
-                  selectedTextColor: _selectedTextColor,
-                  onPageChanged: _onTextColorChange,
-                  onTap: (index) {
-                    _onColorChange(index);
-                  },
+                  onPickerTap: _onToggleBackgroundGradientPicker,
+                  onScreenTap: _onScreenTap,
+                  selectedTextBackgroundGradientIndex: _selectedTextBackgroundGradient,
+                  onToggleTextColorPicker: _onToggleTextColorSelector,
+                  onChangeTextBackground: _onChangeTextBackground,
+                  activeItem: _activeItem,
                 ),
-            BackgroundGradientSelectorWidget(
-              isTextInput: _isTextInput,
-              isBackgroundColorPickerSelected: _isBackgroundColorPickerSelected,
-              inAction: _inAction,
-              animationsDuration: widget.animationsDuration,
-              gradientsPageController: _gradientsPageController,
-              onPageChanged: _onChangeBackgroundGradient,
-              onItemTap: _onBackgroundGradientTap,
-              selectedGradientIndex: _selectedBackgroundGradient,
-            ),
-            TopToolsWidget(
-              isTextInput: _isTextInput,
-              selectedBackgroundGradientIndex: _selectedBackgroundGradient,
-              animationsDuration: widget.animationsDuration,
-              onPickerTap: _onToggleBackgroundGradientPicker,
-              onScreenTap: _onScreenTap,
-              selectedTextBackgroundGradientIndex:
-                  _selectedTextBackgroundGradient,
-              onToggleTextColorPicker: _onToggleTextColorSelector,
-              onChangeTextBackground: _onChangeTextBackground,
-              activeItem: _activeItem,
-            ),
-            RemoveWidget(
-              isTextInput: _isTextInput,
-              animationsDuration: widget.animationsDuration,
-              activeItem: _activeItem,
-              isDeletePosition: _isDeletePosition,
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: FooterToolsWidget(
-                onDone: _onDone,
-                doneButtonChild: widget.doneButtonChild,
-                isLoading: _isLoading,
               ),
-            ),
-          ],
+              RemoveWidget(
+                isTextInput: _isTextInput,
+                animationsDuration: widget.animationsDuration,
+                activeItem: _activeItem,
+                isDeletePosition: _isDeletePosition,
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: FooterToolsWidget(
+                  onDone: _onDone,
+                  doneButtonChild: _isLoading ? const SizedBox() : widget.doneButtonChild,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -526,8 +517,7 @@ class _StoryMakerState extends State<StoryMaker> {
       viewportFraction: .125,
     );
     _textColorsPageController = PageController(
-      initialPage:
-          defaultColors.indexWhere((element) => element == _selectedTextColor),
+      initialPage: defaultColors.indexWhere((element) => element == _selectedTextColor),
       viewportFraction: .1,
     );
   }
@@ -539,19 +529,20 @@ class _StoryMakerState extends State<StoryMaker> {
   /// The image is saved as a png file with the current date and time as the file name.
   /// After the image is saved, it navigates back and passes the image file as the result of the navigation.
   Future<void> _onDone() async {
-    final boundary = previewContainer.currentContext!.findRenderObject()
-        as RenderRepaintBoundary?;
     _isLoading = true;
     setState(() {});
-    final image = await boundary!.toImage(pixelRatio: 3);
-    final directory = (await getApplicationDocumentsDirectory()).path;
-    final byteData = (await image.toByteData(format: ui.ImageByteFormat.png))!;
-    final pngBytes = byteData.buffer.asUint8List();
-    final imgFile = File('$directory/${DateTime.now()}.png');
-    await imgFile.writeAsBytes(pngBytes);
-    _isLoading = false;
-    setState(() {});
-    Navigator.of(context).pop(imgFile);
+    Future.delayed(const Duration(milliseconds: 300), () async {
+      final boundary = previewContainer.currentContext!.findRenderObject() as RenderRepaintBoundary?;
+      final image = await boundary!.toImage(pixelRatio: 3);
+      final directory = (await getApplicationDocumentsDirectory()).path;
+      final byteData = (await image.toByteData(format: ui.ImageByteFormat.png))!;
+      final pngBytes = byteData.buffer.asUint8List();
+      final imgFile = File('$directory/${DateTime.now()}.png');
+      await imgFile.writeAsBytes(pngBytes);
+      _isLoading = false;
+      setState(() {});
+      Navigator.of(context).pop(imgFile);
+    });
   }
 
   /// Handles the submission of text input.

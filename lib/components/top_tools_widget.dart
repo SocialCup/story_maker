@@ -68,13 +68,13 @@ class TopToolsWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
+              /*IconButton(
                 icon: const Icon(
                   Icons.color_lens_outlined,
                   color: Colors.white,
                 ),
                 onPressed: onToggleTextColorPicker,
-              ),
+              ),*/
               IconButton(
                 icon: Container(
                   padding: const EdgeInsets.all(4),
@@ -112,11 +112,11 @@ class TopToolsWidget extends StatelessWidget {
             ? const SizedBox()
             : Row(
                 children: [
-                  const BackButton(
+                  /*const BackButton(
                     color: Colors.white,
-                  ),
+                  ),*/
                   const Spacer(),
-                  GestureDetector(
+                  /*GestureDetector(
                     onTap: onPickerTap,
                     child: Container(
                       height: 36,
@@ -136,7 +136,7 @@ class TopToolsWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 8),*/
                   GestureDetector(
                     onTap: onScreenTap,
                     child: Container(

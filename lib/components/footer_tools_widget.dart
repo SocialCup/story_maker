@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../extensions/context_extension.dart';
-
 /// A widget for displaying footer tools.
 ///
 /// This widget is a part of the UI where the user can interact with footer tools.
@@ -17,7 +15,6 @@ class FooterToolsWidget extends StatelessWidget {
   final Widget? doneButtonChild;
 
   /// Indicates whether the widget is in loading state.
-  final bool isLoading;
 
   /// Creates an instance of the widget.
   ///
@@ -27,7 +24,6 @@ class FooterToolsWidget extends StatelessWidget {
     super.key,
     required this.onDone,
     this.doneButtonChild,
-    this.isLoading = false,
   });
 
   /// Describes the part of the user interface represented by this widget.
@@ -36,11 +32,10 @@ class FooterToolsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: context.bottomPadding + kToolbarHeight,
-      alignment: Alignment.topCenter,
+      alignment: Alignment.bottomRight,
       child: Padding(
         padding: const EdgeInsets.only(top: 4, right: 16),
-        child: Row(
+        child: doneButtonChild != null ? const SizedBox() : Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             ElevatedButton(
@@ -56,9 +51,7 @@ class FooterToolsWidget extends StatelessWidget {
                 shadowColor: MaterialStateProperty.all(Colors.white),
                 backgroundColor: MaterialStateProperty.all(Colors.white),
               ),
-              child: isLoading
-                  ? const CupertinoActivityIndicator()
-                  : doneButtonChild ??
+              child: doneButtonChild ??
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -66,7 +59,7 @@ class FooterToolsWidget extends StatelessWidget {
                             children: [
                               SizedBox(width: 4),
                               Text(
-                                'Add to story',
+                                'Paylaş',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 12,

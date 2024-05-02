@@ -30,41 +30,45 @@ class _MyAppState extends State<MyApp> {
       appBar: AppBar(
         title: const Text('Story Designer Example'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () async {
-                await [
-                  Permission.photos,
-                  Permission.storage,
-                ].request();
-                final picker = ImagePicker();
-                final pickedFile =
-                    await picker.pickImage(source: ImageSource.gallery);
-                if (pickedFile != null) {
-                  final editedFile = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => StoryMaker(
-                        filePath: pickedFile.path,
-                      ),
+      body: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () async {
+              await [
+                Permission.photos,
+                Permission.storage,
+              ].request();
+              final picker = ImagePicker();
+              final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+              if (pickedFile != null) {
+                final editedFile = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => StoryMaker(
+                      filePath: pickedFile.path,
                     ),
-                  );
-                  setState(() {
-                    image = editedFile;
-                  });
-                  print('editedFile: ${image?.path}');
-                }
-              },
-              child: const Text('Pick Image'),
-            ),
-            if (image != null)
-              Expanded(
-                child: Image.file(image!),
-              ),
-          ],
-        ),
+                  ),
+                );
+                setState(() {
+                  image = editedFile;
+                });
+                print('editedFile: ${image?.path}');
+              }
+            },
+            child: const Text('Pick Image'),
+          ),
+          if (image != null)
+            Container(
+                width: 200,
+                height: 300,
+                child: Image.file(
+                  image!,
+                  fit: BoxFit.fitHeight,
+                ))
+          // if (image != null)
+          //   Expanded(
+          //     child: Image.file(image!),
+          //   ),
+        ],
       ),
     );
   }
