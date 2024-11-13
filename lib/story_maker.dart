@@ -32,11 +32,13 @@ class StoryMaker extends StatefulWidget {
     required this.filePath,
     this.animationsDuration = const Duration(milliseconds: 300),
     this.doneButtonChild,
+    this.buttonColor,
   });
 
   final String filePath;
   final Duration animationsDuration;
   final Widget? doneButtonChild;
+  final Color? buttonColor;
 
   @override
   _StoryMakerState createState() => _StoryMakerState();
@@ -321,6 +323,7 @@ class _StoryMakerState extends State<StoryMaker> {
                 alignment: Alignment.bottomCenter,
                 child: FooterToolsWidget(
                   onDone: _onDone,
+                  sendButtonColor: widget.buttonColor,
                   doneButtonChild: _isLoading ? const SizedBox() : widget.doneButtonChild,
                 ),
               ),

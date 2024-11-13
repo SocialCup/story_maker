@@ -14,6 +14,8 @@ class FooterToolsWidget extends StatelessWidget {
   /// The child widget of the done button.
   final Widget? doneButtonChild;
 
+  final Color? sendButtonColor;
+
   /// Indicates whether the widget is in loading state.
 
   /// Creates an instance of the widget.
@@ -24,6 +26,7 @@ class FooterToolsWidget extends StatelessWidget {
     super.key,
     required this.onDone,
     this.doneButtonChild,
+    this.sendButtonColor,
   });
 
   /// Describes the part of the user interface represented by this widget.
@@ -34,22 +37,22 @@ class FooterToolsWidget extends StatelessWidget {
     return Container(
       alignment: Alignment.bottomRight,
       child: Padding(
-        padding: const EdgeInsets.only(top: 4, right: 16, bottom: 10),
+        padding: const EdgeInsets.only(top: 4, right: 16, bottom: 15),
         child: doneButtonChild != null ? const SizedBox() : Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             ElevatedButton(
               onPressed: onDone,
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all(
-                  const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(18),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                backgroundColor: sendButtonColor,
+                elevation: 0,
+                shadowColor: Colors.transparent,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(50),
                     ),
-                  ),
                 ),
-                shadowColor: MaterialStateProperty.all(Colors.white),
-                backgroundColor: MaterialStateProperty.all(Colors.white),
               ),
               child: doneButtonChild ??
                       const Row(
@@ -61,14 +64,14 @@ class FooterToolsWidget extends StatelessWidget {
                               Text(
                                 'Paylaş',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontSize: 12,
                                 ),
                               ),
-                              SizedBox(width: 4),
+                              SizedBox(width: 5),
                               Icon(
                                 CupertinoIcons.forward,
-                                color: Colors.black,
+                                color: Colors.white,
                                 size: 18,
                               ),
                             ],

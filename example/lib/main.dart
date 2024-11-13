@@ -7,7 +7,8 @@ import 'package:story_maker/story_maker.dart';
 
 void main() {
   runApp(
-    const MaterialApp(
+    MaterialApp(
+      theme: ThemeData.dark(useMaterial3: false),
       debugShowCheckedModeBanner: false,
       home: MyApp(),
     ),
@@ -45,6 +46,7 @@ class _MyAppState extends State<MyApp> {
                   MaterialPageRoute(
                     builder: (context) => StoryMaker(
                       filePath: pickedFile.path,
+                      buttonColor: Colors.purple,
                     ),
                   ),
                 );
